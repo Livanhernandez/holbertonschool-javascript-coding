@@ -1,21 +1,20 @@
 #!/usr/bin/node
-
 const fs = require('fs');
 
 const filePath = process.argv[2];
 
-// If no file path is provided, print an error message and exit with a non-zero status code
 if (!filePath) {
-  console.error('Error: ENOENT: no such file or directory');
+  console.error('Error: Please provide a file path as an argument.');
   process.exit(1);
 }
 
 fs.readFile(filePath, 'utf-8', (err, data) => {
-  // If an error occurred, print it and exit with a non-zero status code
   if (err) {
-    console.error(err);
-    return;
+    // Convert error object to a more informative JSON-like format
+    console.error({
+      error: err
+    });
+  } else {
+    console.log(data);
   }
-  // Print the data if no error occurred
-  console.log(data);
 });
