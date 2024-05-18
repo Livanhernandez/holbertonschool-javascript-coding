@@ -1,23 +1,22 @@
 #!/usr/bin/node
-
-// Import the request library
 const request = require('request');
+
+// The first argument is the URL to request (GET)
+// The status code must be printed like this: code: <status code>
+// You must use the module request
 
 const url = process.argv[2];
 
-// Check if the URL is provided
 if (!url) {
-  console.error('Please provide a valid URL');
+  console.error('Error: Please provide a url as an argument.');
   process.exit(1);
 }
 
-// Make a request to the URL and get the status code
-request.get(url, (err, response) => {
-  if (err) {
-    // Print the error if one occurred
-    console.error('Error:', err.message);
-    return;
+request(url, (error, response) => {
+  if (error) {
+    console.error('Error:', error.message);
+    process.exit(1); // Exit with an error code
+  } else {
+    console.log(`code: ${response.statusCode}`);
   }
-  // Print the response status code if a response was received
-  console.log(`code: ${response.statusCode}`);
 });

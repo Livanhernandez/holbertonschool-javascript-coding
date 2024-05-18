@@ -1,40 +1,23 @@
 #!/usr/bin/node
-
-// Import the request module
-const request = require('request');
 const fs = require('fs');
+const request = require('request');
 
-// Get the API URL and file name from the command line args
-const apiUrl = process.argv[2];
-const fileName = process.argv[3];
+const url = process.argv[2];
+const filePath = process.argv[3];
 
-// Check if the API URL and file name are provided
-if (!apiUrl) {
-  console.error('Please provide a valid API URL');
-}
-
-// Check if the file name is provided
-if (!fileName) {
-  console.error('Please provide a file name');
-}
-
-// Make a request to the API
-request(apiUrl, (err, response, body) => {
-  // Check if there is an error
-  if (err) {
-    // Print the error
-    console.error(err.message);
+request(url, (error, response) => {
+  if (error) {
+    console.error('Error:', error.message);
+    process.exit(1); // Exit with an error code
+  } else {
+    // get the body that has <p> tags and is not JSON...
+    const data = response.body;
+    fs.writeFile(filePath, data, 'utf-8', (err) => {
+      if (err) {
+        console.error({
+          error: err
+        });
+      }
+    });
   }
-
-  // Check if the status code is not 200
-  if (response.statusCode !== 200) {
-    console.error(`Invalid status code ${response.statusCode}`);
-  }
-  // Write the response to a file
-  fs.writeFile(fileName, body, 'utf-8', (err) => {
-    if (err) {
-      // Print the error
-      console.error(err.message);
-    }
-  });
 });
